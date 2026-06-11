@@ -57,6 +57,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Delete existing branch if it exists
+        run: |
+          git push origin --delete release/v${{ env.GALASA_VERSION }} || true
+
       - name: Create branch for version update
         run: |
           git checkout -b release/v${{ env.GALASA_VERSION }}
@@ -79,6 +83,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create \
+            --repo ${{ github.repository }} \
             --title "Release Galasa v${{ env.GALASA_VERSION }}" \
             --body "Automated release of Galasa version ${{ env.GALASA_VERSION }}
 
